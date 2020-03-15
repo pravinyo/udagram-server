@@ -42,6 +42,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     }
     
 
+    console.log("Req header received:"+req.headers.authorization);
     const token_bearer = req.headers.authorization.split(' ');
 
     if(token_bearer.length != 2){
@@ -90,16 +91,18 @@ router.post('/login', async (req: Request, res: Response) => {
         return res.status(401).send({ auth: false, message: 'Unauthorized' });
     }
 
+    let token;
+
     try{
         // Generate JWT
-        const jwt = generateJWT(user);
-        //console.log("JWT is : "+jwt)
+         token = generateJWT(user);
 
     }catch (err) {
         console.log("Error in JWT:"+err);
     }
 
-    res.status(200).send({ auth: true, token: jwt, user: user.short()});
+    //console.log("JWT Token  is : "+token);
+    res.status(200).send({ auth: true, token: token, user: user.short()});
 });
 
 //register a new user
